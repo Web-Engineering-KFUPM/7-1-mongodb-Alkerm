@@ -184,21 +184,74 @@
  *  This is the default behavior of Mongoose.
  */
 
-// import mongoose
+import mongoose from "mongoose";
 
 // establish connection
+const DB_USERNAME = "s202279480_db_user";
+const DB_PASSWORD = "sW2ox9kE0by5VdGp";
+const CLUSTER_HOST = "cluster0.rygtjue.mongodb.net";
+const DB_NAME = "TestDB";
 
+const MONGO_URI = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${CLUSTER_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
 
 // define schema
+const studentSchema = new mongoose.Schema({
+  name: String,
+  age: Number,
+  major: String,
+});
 
+const Student = mongoose.model("Student", studentSchema);
 
 // create document
+async function createStudents() {
+  // Keep this rerunnable so records are predictable for the lab checks.
+  await Student.deleteMany({});
 
+  await Student.insertMany([
+    { name: "Ali", age: 21, major: "CS" },
+    { name: "Sara", age: 23, major: "SE" },
+  ]);
+
+  console.log("Inserted students");
+}
 
 // read document
-
+async function readStudents() {
+  const all = await Student.find();
+  console.log("All students:", all);
+}
 
 // update document
-
+async function updateStudent() {
+  await Student.updateOne({ name: "Ali" }, { $set: { age: 22 } });
+  console.log("Updated Ali");
+}
 
 // delete document
+async function deleteStudent() {
+  await Student.deleteOne({ name: "Sara" });
+  console.log("Deleted Sara");
+}
+
+async function main() {
+  try {
+    await mongoose.connect(MONGO_URI);
+    console.log("Connected to MongoDB");
+
+    await createStudents();
+    await readStudents();
+    await updateStudent();
+    await deleteStudent();
+
+    const finalResult = await Student.find().lean();
+    console.log("Final students:", finalResult);
+  } catch (error) {
+    console.error("MongoDB error:", error.message);
+  } finally {
+    await mongoose.connection.close();
+    console.log("Connection closed");
+  }
+}
+
+main();
