@@ -189,10 +189,7 @@ import mongoose from "mongoose";
 // establish connection
 const DB_USERNAME = "s202279480_db_user";
 const DB_PASSWORD = "sW2ox9kE0by5VdGp";
-const CLUSTER_HOST = "cluster0.rygtjue.mongodb.net";
-const DB_NAME = "TestDB";
-
-const MONGO_URI = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${CLUSTER_HOST}/${DB_NAME}?retryWrites=true&w=majority`;
+const MONGO_URI = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.rygtjue.mongodb.net/TestDB?retryWrites=true&w=majority`;
 
 // define schema
 const studentSchema = new mongoose.Schema({
